@@ -7,10 +7,11 @@ const port = 3000;
 
 // MySQL connection
 const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME
+  host: 'yamanote.proxy.rlwy.net',
+  port: 34252,
+  user: 'root',
+  password: 'JhrhtipykYGyIpNABYhkJNwqDgnItbJJ',
+  database: 'railway'
 });
 
 // log err if mysql connection breaks
