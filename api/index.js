@@ -7,11 +7,14 @@ const port = 3000;
 
 // MySQL connection
 const db = mysql.createConnection({
-  host: 'yamanote.proxy.rlwy.net',
-  port: 34252,
-  user: 'root',
-  password: 'JhrhtipykYGyIpNABYhkJNwqDgnItbJJ',
-  database: 'railway'
+  host: 'mysql-aiven-imdb-imdb-data.i.aivencloud.com',
+  port: 19586,
+  user: 'avnadmin',
+  password: 'AVNS_lpkI84M_uRh8fWzkvVn',
+  database: 'defaultdb'
+  ssl: {
+    ca: fs.readFileSync('./ca.pem')
+  }
 });
 
 // log err if mysql connection breaks
