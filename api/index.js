@@ -1,5 +1,6 @@
 const express = require("express"); // web server dependency 
 const mysql = require("mysql2"); // mySQL dependency 
+const fs = require('fs'); // file sync for pem file
 require("dotenv").config(); // for .env setup where we define DB credetials etc
 
 const app = express(); // spin up web service
@@ -7,11 +8,11 @@ const port = 3000;
 
 // MySQL connection
 const db = mysql.createConnection({
-  host: 'mysql-aiven-imdb-imdb-data.i.aivencloud.com',
-  port: 19586,
-  user: 'avnadmin',
-  password: 'AVNS_lpkI84M_uRh8fWzkvVn',
-  database: 'defaultdb'
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
   ssl: {
     ca: fs.readFileSync('./ca.pem')
   }
