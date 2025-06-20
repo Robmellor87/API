@@ -30,7 +30,7 @@ db.connect(err => {
 
 // GET route setup
 app.get("/titles", (req, res) => {
-  const { id, title, year, director } = req.query;
+  const { id, title, year, director, poster } = req.query;
 
   if (!id && !title && !year && !director) {
     return res.status(400).json({
