@@ -41,13 +41,13 @@ app.get("/titles", (req, res) => {
   let query = `
     SELECT t.*, d.director
     FROM titles t
-    LEFT JOIN directors d ON t.title_id = d.title_id
+    LEFT JOIN directors d ON t.id = d.id
     WHERE 1=1
   `;
   const values = [];
 
-  if (id) {
-    query += " AND t.title_id = ?";
+  if (id) { 
+    query += " AND t.id = ?";
     values.push(id);
   }
 
@@ -62,6 +62,11 @@ app.get("/titles", (req, res) => {
   }
 
   if (director) {
+    query += " AND d.director = ?";
+    values.push(director);
+  }
+
+   if (poster) {
     query += " AND d.director = ?";
     values.push(director);
   }
