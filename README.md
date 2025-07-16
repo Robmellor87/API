@@ -1,3 +1,16 @@
+** How to test API **
+
+Endpoint: https://api-sbot.onrender.com/titles?
+QS params: title=
+           director=
+           year=
+
+eg. https://api-sbot.onrender.com/titles?director=stanley kubrick
+
+nb: periods of downtime will spin down the API service hosted on Render so 1st call may take ~30s to respond.
+
+----------------------
+
 My API / APP project
 
 Goal 1) DONE
