@@ -9,7 +9,7 @@ const port = 3000;
 const cors = require('cors');
 app.use(cors({
   origin: [
-    'https://web-app-zmqy.onrender.com/',   // web app also hosted on Render
+    'https://web-app-zmqy.onrender.com',   // web app also hosted on Render
   ]
 }));
 
