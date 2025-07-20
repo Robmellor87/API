@@ -18,6 +18,9 @@ const db = mysql.createConnection({
   }
 });
 
+// wrap db function in the promise API for later useage in randomiser than needs to wait
+const dbp = db.promise();
+
 // log err if mysql connection breaks
 db.connect(err => {
   if (err) {
@@ -120,7 +123,7 @@ app.get('/randomise', async (req, res) => {
       if (isNaN(n) || n < 1) {
         return res.status(400).json({ error: '`years` must be a positive integer' });
       }
-      const [yearRows] = await db.execute(
+      const [yearRows] = await dbp.execute(
         `SELECT DISTINCT year
          FROM titles
          ORDER BY RAND()
@@ -136,7 +139,7 @@ app.get('/randomise', async (req, res) => {
       if (isNaN(n) || n < 1) {
         return res.status(400).json({ error: '`ids` must be a positive integer' });
       }
-      const [idRows] = await db.execute(
+      const [idRows] = await dbp.execute(
         `SELECT DISTINCT id
          FROM titles
          ORDER BY RAND()
@@ -144,8 +147,6 @@ app.get('/randomise', async (req, res) => {
       );
       responsePayload.ids = idRows.map(r => r.id);
     }
-
-    // (You can plug in more blocks here: e.g. ?options=5 to get 5 full movies, etc.)
 
     // If no known query params were provided…
     if (Object.keys(responsePayload).length === 0) {
