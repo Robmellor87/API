@@ -123,7 +123,7 @@ app.get('/randomise', async (req, res) => {
       if (isNaN(n) || n < 1) {
         return res.status(400).json({ error: '`years` must be a positive integer' });
       }
-      const [yearRows] = await dbp.execute(
+      const [yearRows] = await dbp.query(
         `SELECT DISTINCT year
          FROM titles
          ORDER BY RAND()
@@ -139,7 +139,7 @@ app.get('/randomise', async (req, res) => {
       if (isNaN(n) || n < 1) {
         return res.status(400).json({ error: '`ids` must be a positive integer' });
       }
-      const [idRows] = await dbp.execute(
+      const [idRows] = await dbp.query(
         `SELECT DISTINCT id
          FROM titles
          ORDER BY RAND()
