@@ -6,6 +6,13 @@ require("dotenv").config(); // for .env setup where we define DB credetials etc
 const app = express(); // spin up web service
 const port = 3000;
 
+const cors = require('cors');
+app.use(cors({
+  origin: [
+    'https://web-app-zmqy.onrender.com/',   // web app also hosted on Render
+  ]
+}));
+
 // MySQL connection
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
