@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Quiz</title>
+  <style>
+    /* Mobile-friendly layout */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: #f0f0f0;
+    }
+    #quiz-container {
+      background: #fff;
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      max-width: 320px;
+      width: 100%;
+      text-align: center;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+    h2 {
+      font-size: 1.25rem;
+      margin: 12px 0;
+    }
+    select, button {
+      width: 100%;
+      padding: 8px;
+      font-size: 1rem;
+      margin-top: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button:disabled {
+      background: #ddd;
+      cursor: not-allowed;
+    }
+    #popup {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.8);
+      color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      font-size: 1.5rem;
+      text-align: center;
+      display: none;
+      z-index: 1000;
+    }
+    #popup.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div id="quiz-container">
+    <img id="poster" src="" alt="Movie Poster">
+    <h2 id="title"></h2>
+    <select id="year-select" disabled>
+      <option value="">Select Year</option>
+    </select>
+    <button id="submit-btn" disabled>Submit</button>
+  </div>
+  <div id="popup"></div>
+
+  <script>
+    const posterEl = document.getElementById('poster');
+    const titleEl = document.getElementById('title');
+    const selectEl = document.getElementById('year-select');
+    const submitBtn = document.getElementById('submit-btn');
+    const popupEl = document.getElementById('popup');
+    let currentCorrectYear = null;
+
+    // Load a new quiz question
+    async function loadQuestion() {
+      // Reset UI
+      submitBtn.disabled = true;
+      selectEl.disabled = true;
+      selectEl.innerHTML = '<option value="">Select Year</option>';
+
+      try {
+        // 1) Get one random movie ID and two random years
+        const randRes = await fetch('https://api-sbot.onrender.com/randomise?ids=1&years=2');
+        const { ids, years: wrongYears } = await randRes.json();
+        const movieId = ids[0];
+
+        // 2) Fetch movie details
+        const movieRes = await fetch(`https://api-sbot.onrender.com/titles?id=${movieId}`);
+        const [movie] = await movieRes.json();
+
+        // 3) Display poster and title
+        posterEl.src = movie.posterURL;
+        posterEl.alt = movie.title;
+        titleEl.textContent = movie.title;
+
+        // 4) Prepare dropdown options
+        currentCorrectYear = movie.year.toString();
+        const options = [currentCorrectYear, ...wrongYears.map(y => y.toString())]
+          .sort(() => Math.random() - 0.5);
+
+        options.forEach(year => {
+          const opt = document.createElement('option');
+          opt.value = year;
+          opt.textContent = year;
+          selectEl.appendChild(opt);
+        });
+
+        // Enable selection
+        selectEl.disabled = false;
+      } catch (err) {
+        console.error('Error loading question:', err);
+        alert('Failed to load question.');
+      }
+    }
+
+    // Show popup message then reload
+    function showPopup(message) {
+      popupEl.textContent = message;
+      popupEl.classList.add('show');
+      setTimeout(() => {
+        popupEl.classList.remove('show');
+        loadQuestion();
+      }, 5000);
+    }
+
+    // Event listeners
+    selectEl.addEventListener('change', () => {
+      submitBtn.disabled = !selectEl.value;
+    });
+
+    submitBtn.addEventListener('click', () => {
+      if (selectEl.value === currentCorrectYear) {
+        showPopup('CORRECT!');
+      } else {
+        showPopup('WRONG!');
+      }
+    });
+
+    // Kick off
+    loadQuestion();
+  </script>
+</body>
+</html>
