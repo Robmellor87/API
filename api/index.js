@@ -109,6 +109,60 @@ app.post("/titles/director", (req, res) => {
 }); // end of POST route **/
 
 
+app.get('/randomise', async (req, res) => {
+  try {
+    const { years, ids, directors } = req.query;
+    const responsePayload = {};
+
+    // 1) Random years: /randomise?years=3
+    if (years) {
+      const n = parseInt(years, 10);
+      if (isNaN(n) || n < 1) {
+        return res.status(400).json({ error: '`years` must be a positive integer' });
+      }
+      const [yearRows] = await db.execute(
+        `SELECT DISTINCT year
+         FROM titles
+         ORDER BY RAND()
+         LIMIT ?`, [n]
+      );
+      responsePayload.years = yearRows.map(r => r.year);
+    }
+
+
+    // 2) Random IDs: /randomise?ids=3
+    if (ids) {
+      const n = parseInt(ids, 10);
+      if (isNaN(n) || n < 1) {
+        return res.status(400).json({ error: '`ids` must be a positive integer' });
+      }
+      const [idRows] = await db.execute(
+        `SELECT DISTINCT id
+         FROM titles
+         ORDER BY RAND()
+         LIMIT ?`, [n]
+      );
+      responsePayload.ids = idRows.map(r => r.id);
+    }
+
+    // (You can plug in more blocks here: e.g. ?options=5 to get 5 full movies, etc.)
+
+    // If no known query params were provided…
+    if (Object.keys(responsePayload).length === 0) {
+      return res.status(400).json({
+        error: 'Please provide at least one of: years, ids (e.g. ?years=3 or ?ids=5)'
+      });
+    }
+
+    res.json(responsePayload);
+
+  } catch (err) {
+    console.error('[/randomise] error:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
 
 // Start the server
 app.listen(port, () => {
