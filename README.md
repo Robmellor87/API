@@ -1,3 +1,7 @@
+
+web app: https://web-app-zmqy.onrender.com/
+if service has been inactive for a while, web app may be unresponsive for ~30s whilst API spins up
+---------------------
 ** How to test API **
 
 Endpoint: https://api-sbot.onrender.com/titles?
@@ -22,10 +26,10 @@ Goal 2) DONE
 Host this in a mySQL databse 
 
 Goal 3) DONE
-Create hosted API service written in node.js to allow GET querying of movie title, year, director 
+Create hosted API service written in node.js to allow GET querying of movie title, year, director + other logic
 
-Goal 4) PENDING
-Make Android app for a basic movie quiz game for guessing dates, directors etc. Likley in Kotlin. 
+Goal 4) DONE
+Make simple web app to present user with titles and quiz them on year of release
 
 Goal 5) Add some kind of AI agent (GPT API) to the app (ideas: pixelate and guess poster, describe the plot, provide synopsis...)
 
